@@ -33,3 +33,13 @@ func (l *RegisterLogic) Register(req *types.Request) (resp *types.Response, err 
 	l.svcCtx.URegisterRpc.RegisterByPhone(ctx, &register.RegReq{})
 	return
 }
+
+func (l *RegisterLogic) SendCode(t *types.CodeRequest) (resp *types.CodeResponse, err error) {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelFunc()
+	l.svcCtx.URegisterRpc.SendCode(ctx, &register.CodeReq{
+		Phone:   t.Phone,
+		Country: t.Country,
+	})
+	return
+}

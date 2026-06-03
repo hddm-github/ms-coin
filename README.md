@@ -58,3 +58,4 @@ go run main.go -f etc/conf.yaml
 | 2026-06-03 | `feat` | 初始化 Go 工作区（go.work）及项目基础骨架，实现用户中心服务骨架与手机注册接口，配置 Etcd 注册发现 | Antigravity / User |
 | 2026-06-03 | `fix` | 修复 `ucenter-api` 中连接 RPC 服务时的 Etcd Key 拼写错误 (`ucenter.rpc` -> `uclient.rpc`) | Antigravity |
 | 2026-06-03 | `docs` | 创建并完善根目录 `README.md` 项目说明文件，增加提交日志记录 | Antigravity |
+| 2026-06-03 | `feat` | 实现发送短信验证码功能并接入 Redis 缓存进行验证码有效期控制 | Antigravity / User |

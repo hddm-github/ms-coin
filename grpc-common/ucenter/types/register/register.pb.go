@@ -2,17 +2,16 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v3.19.4
-// source: ucclient.proto
+// source: register.proto
 
 package register
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -25,9 +24,9 @@ const (
 type RegReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	Password      string      `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	Captcha       *CaptchaReq `protobuf:"bytes,3,opt,name=captcha,proto3" json:"captcha,omitempty"`
-	Phone         string      `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	Captcha       *CaptchaReq            `protobuf:"bytes,3,opt,name=captcha,proto3" json:"captcha,omitempty"`
+	Phone         string                 `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
 	Promotion     string                 `protobuf:"bytes,5,opt,name=promotion,proto3" json:"promotion,omitempty"`
 	Code          string                 `protobuf:"bytes,6,opt,name=code,proto3" json:"code,omitempty"`
 	Country       string                 `protobuf:"bytes,7,opt,name=country,proto3" json:"country,omitempty"`
@@ -210,15 +209,103 @@ func (*RegRes) Descriptor() ([]byte, []int) {
 	return file_register_proto_rawDescGZIP(), []int{2}
 }
 
+type CodeReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Phone         string                 `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
+	Country       string                 `protobuf:"bytes,2,opt,name=country,proto3" json:"country,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CodeReq) Reset() {
+	*x = CodeReq{}
+	mi := &file_register_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CodeReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CodeReq) ProtoMessage() {}
+
+func (x *CodeReq) ProtoReflect() protoreflect.Message {
+	mi := &file_register_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CodeReq.ProtoReflect.Descriptor instead.
+func (*CodeReq) Descriptor() ([]byte, []int) {
+	return file_register_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CodeReq) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+func (x *CodeReq) GetCountry() string {
+	if x != nil {
+		return x.Country
+	}
+	return ""
+}
+
+type NoRes struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NoRes) Reset() {
+	*x = NoRes{}
+	mi := &file_register_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NoRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NoRes) ProtoMessage() {}
+
+func (x *NoRes) ProtoReflect() protoreflect.Message {
+	mi := &file_register_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NoRes.ProtoReflect.Descriptor instead.
+func (*NoRes) Descriptor() ([]byte, []int) {
+	return file_register_proto_rawDescGZIP(), []int{4}
+}
+
 var File_register_proto protoreflect.FileDescriptor
 
 const file_register_proto_rawDesc = "" +
 	"\n" +
-	"\x0eregister.proto\x12\bucclient\"\xf6\x01\n" +
+	"\x0eregister.proto\x12\bregister\"\xf6\x01\n" +
 	"\x06RegReq\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12.\n" +
-	"\acaptcha\x18\x03 \x01(\v2\x14.ucclient.CaptchaReqR\acaptcha\x12\x14\n" +
+	"\acaptcha\x18\x03 \x01(\v2\x14.register.CaptchaReqR\acaptcha\x12\x14\n" +
 	"\x05phone\x18\x04 \x01(\tR\x05phone\x12\x1c\n" +
 	"\tpromotion\x18\x05 \x01(\tR\tpromotion\x12\x12\n" +
 	"\x04code\x18\x06 \x01(\tR\x04code\x12\x18\n" +
@@ -228,9 +315,14 @@ const file_register_proto_rawDesc = "" +
 	"CaptchaReq\x12\x16\n" +
 	"\x06server\x18\x01 \x01(\tR\x06server\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\"\b\n" +
-	"\x06RegRes2A\n" +
+	"\x06RegRes\"9\n" +
+	"\aCodeReq\x12\x14\n" +
+	"\x05phone\x18\x01 \x01(\tR\x05phone\x12\x18\n" +
+	"\acountry\x18\x02 \x01(\tR\acountry\"\a\n" +
+	"\x05NoRes2q\n" +
 	"\bRegister\x125\n" +
-	"\x0fregisterByPhone\x12\x10.ucclient.RegReq\x1a\x10.ucclient.RegResB\aZ\x05./etcb\x06proto3"
+	"\x0fregisterByPhone\x12\x10.register.RegReq\x1a\x10.register.RegRes\x12.\n" +
+	"\bsendCode\x12\x11.register.CodeReq\x1a\x0f.register.NoResB\aZ\x05./etcb\x06proto3"
 
 var (
 	file_register_proto_rawDescOnce sync.Once
@@ -244,18 +336,22 @@ func file_register_proto_rawDescGZIP() []byte {
 	return file_register_proto_rawDescData
 }
 
-var file_register_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_register_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_register_proto_goTypes = []any{
-	(*RegReq)(nil),     // 0: ucclient.RegReq
-	(*CaptchaReq)(nil), // 1: ucclient.CaptchaReq
-	(*RegRes)(nil),     // 2: ucclient.RegRes
+	(*RegReq)(nil),     // 0: register.RegReq
+	(*CaptchaReq)(nil), // 1: register.CaptchaReq
+	(*RegRes)(nil),     // 2: register.RegRes
+	(*CodeReq)(nil),    // 3: register.CodeReq
+	(*NoRes)(nil),      // 4: register.NoRes
 }
 var file_register_proto_depIdxs = []int32{
-	1, // 0: ucclient.RegReq.captcha:type_name -> ucclient.CaptchaReq
-	0, // 1: ucclient.Register.registerByPhone:input_type -> ucclient.RegReq
-	2, // 2: ucclient.Register.registerByPhone:output_type -> ucclient.RegRes
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
+	1, // 0: register.RegReq.captcha:type_name -> register.CaptchaReq
+	0, // 1: register.Register.registerByPhone:input_type -> register.RegReq
+	3, // 2: register.Register.sendCode:input_type -> register.CodeReq
+	2, // 3: register.Register.registerByPhone:output_type -> register.RegRes
+	4, // 4: register.Register.sendCode:output_type -> register.NoRes
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -272,7 +368,7 @@ func file_register_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_register_proto_rawDesc), len(file_register_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
