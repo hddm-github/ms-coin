@@ -1,0 +1,29 @@
+# Binaries and packaging
+bin/
+pkg/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# Log files
+*.log
