@@ -13,6 +13,6 @@ func RegisterHandlers(r *Routers, serverCtx *svc.ServiceContext) {
 	// 如果要是有中间件怎么办
 	register := NewRegisterHandler(serverCtx)
 	registerRouter := r.Group()
-	registerRouter.Get("/uc/register/phone", register.Register)
+	registerRouter.Post("/uc/register/phone", register.Register)
 	registerRouter.Post("/uc/mobile/code", register.SendCode)
 }
