@@ -2,6 +2,7 @@ package handler
 
 import (
 	common "mscoin-common"
+	"mscoin-common/tools"
 	"net/http"
 	"ucenter-api/internal/logic"
 	"ucenter-api/internal/svc"
@@ -21,11 +22,12 @@ func NewRegisterHandler(svcCtx *svc.ServiceContext) *RegisterHandler {
 
 func (h *RegisterHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var req types.Request
-	//if err := httpx.Parse(r, &req); err != nil {
-	//	httpx.ErrorCtx(r.Context(), w, err)
-	//	return
-	//}
-
+	if err := httpx.ParseJsonBody(r, &req); err != nil {
+		httpx.ErrorCtx(r.Context(), w, err)
+		return
+	}
+	// 获取一下 IP
+	req.Ip = tools.GetRemoteClientIp(r)
 	l := logic.NewRegisterLogic(r.Context(), h.svcCtx)
 	resp, err := l.Register(&req)
 	result := common.NewResult().Deal(resp, err)

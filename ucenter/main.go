@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"grpc-common/ucenter/types/register"
 
+	"os"
 	"ucenter/internal/config"
 	"ucenter/internal/server"
 	"ucenter/internal/svc"
@@ -21,6 +22,11 @@ var configFile = flag.String("f", "etc/conf.yaml", "the config file")
 
 func main() {
 	flag.Parse()
+
+	// 延缓 Redis 和 SQL 的慢日志判定阈值（3秒以上才记录）
+	os.Setenv("REDIS_SLOW_THRESHOLD", "3000ms")
+	os.Setenv("SQL_SLOW_THRESHOLD", "3000ms")
+
 	logx.MustSetup(logx.LogConf{Stat: false, Encoding: "plain"})
 	var c config.Config
 	conf.MustLoad(*configFile, &c)

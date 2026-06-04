@@ -6,3 +6,4 @@ UCenterRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: ucenter.rpc
+  Timeout: 10000

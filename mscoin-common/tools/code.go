@@ -1,14 +1,14 @@
 package tools
 
 import (
+	"fmt"
 	"math/rand"
-	"strconv"
 )
 
-func Gen4Number() string {
+func Rand4Num() string {
 	intn := rand.Intn(9999)
 	if intn < 1000 {
-		intn += 1000
+		intn = intn + 1000
 	}
-	return strconv.Itoa(intn)
+	return fmt.Sprintf("%d", intn)
 }
