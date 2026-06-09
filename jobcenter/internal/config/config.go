@@ -3,14 +3,12 @@
 
 package config
 
-type Config struct {
-	Okx OkxConfig
-}
+import (
+	"jobcenter/internal/database"
+	"jobcenter/internal/kline"
+)
 
-type OkxConfig struct {
-	ApiKey    string
-	SecretKey string
-	Pass      string
-	Host      string
-	Proxy     string
+type Config struct {
+	Okx   kline.OkxConfig
+	Mongo database.MongoConfig
 }
