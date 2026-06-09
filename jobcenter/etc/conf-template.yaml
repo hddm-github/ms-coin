@@ -1,0 +1,6 @@
+Okx:
+  ApiKey: "your-api-key"
+  SecretKey: "your-secret-key"
+  Pass: "your-passphrase"
+  Host: "https://www.okx.com"
+  Proxy: "http://localhost:10808"

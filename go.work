@@ -3,7 +3,7 @@ go 1.25.5
 use (
 	./grpc-common
 	./mscoin-common
-	./register
 	./ucenter
 	./ucenter-api
+	./jobcenter
 )

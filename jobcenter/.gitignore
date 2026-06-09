@@ -1,0 +1,5 @@
+# Local configuration file (contains credentials)
+etc/conf.yaml
+
+# Compiled binary
+jobcenter
