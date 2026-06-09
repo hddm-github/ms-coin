@@ -5,11 +5,11 @@ Etcd:
   - 127.0.0.1:2379
   Key: ucenter.rpc
 Mysql:
-  DataSource: root:root@tcp(154.89.149.68:3309)/mscoin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:root123456@tcp(127.0.0.1:3306)/mscoin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 CacheRedis:
-  - Host: 154.89.149.68:6379
+  - Host: 127.0.0.1:6379
     Type: node
-    Pass: root123456
+    Pass: 
 JWT:
   AccessSecret: "!@#$mscoin"
   AccessExpire: 604800

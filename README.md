@@ -86,6 +86,7 @@ server {
 
 | 日期 | 提交类型 | 提交内容描述 | 提交人 |
 | :--- | :--- | :--- | :--- |
+| 2026-06-09 | `chore` | 脱敏 `ucenter` 的 MySQL/Redis 配置及 `jobcenter` 的配置文件模版，更改为标准本地开发默认配置 | hddm |
 | 2026-06-09 | `feat` | 在 `jobcenter` 中集成 MongoDB 存储，设计 K 线数据领域模型、DAO 与仓储持久化层以批量保存爬取的 K 线数据 | hddm |
 | 2026-06-09 | `feat` | 新增 `jobcenter` 定时任务模块，使用 gocron 定时爬取 OKX K 线数据，并实现本地配置自引导与 Git 忽略机制 | hddm |
 | 2026-06-09 | `feat` | 在 `ucenter-api` 中实现登录状态检测接口 `/uc/check/login`，配置 JWT 鉴权参数并使用公共工具类进行 token 验证 | hddm |
