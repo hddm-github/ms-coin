@@ -9,7 +9,13 @@ type Config struct {
 	zrpc.RpcServerConf
 	Mysql      MysqlConfig
 	CacheRedis cache.CacheConf
+	JWT        AuthConfig
 }
 type MysqlConfig struct {
 	DataSource string
+}
+
+type AuthConfig struct {
+	AccessSecret string
+	AccessExpire int64
 }

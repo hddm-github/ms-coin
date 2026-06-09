@@ -11,13 +11,15 @@ import (
 )
 
 type ServiceContext struct {
-	Config       config.Config
-	URegisterRpc ucclient.Register
+	Config        config.Config
+	UCRegisterRpc ucclient.Register
+	UCLoginRpc    ucclient.Login
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config:       c,
-		URegisterRpc: ucclient.NewRegister(zrpc.MustNewClient(c.UcenterRpc)),
+		Config:        c,
+		UCRegisterRpc: ucclient.NewRegister(zrpc.MustNewClient(c.UcenterRpc)),
+		UCLoginRpc:    ucclient.NewLogin(zrpc.MustNewClient(c.UcenterRpc)),
 	}
 }

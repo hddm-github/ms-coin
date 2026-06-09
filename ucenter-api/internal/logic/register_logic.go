@@ -40,7 +40,7 @@ func (l *RegisterLogic) Register(req *types.Request) (resp *types.Response, err 
 	if err := copier.Copy(regReq, req); err != nil {
 		return nil, err
 	}
-	_, err = l.svcCtx.URegisterRpc.RegisterByPhone(ctx, regReq)
+	_, err = l.svcCtx.UCRegisterRpc.RegisterByPhone(ctx, regReq)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (l *RegisterLogic) Register(req *types.Request) (resp *types.Response, err 
 func (l *RegisterLogic) SendCode(t *types.CodeRequest) (resp *types.CodeResponse, err error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelFunc()
-	l.svcCtx.URegisterRpc.SendCode(ctx, &register.CodeReq{
+	l.svcCtx.UCRegisterRpc.SendCode(ctx, &register.CodeReq{
 		Phone:   t.Phone,
 		Country: t.Country,
 	})

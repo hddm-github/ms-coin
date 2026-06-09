@@ -10,3 +10,6 @@ CacheRedis:
   - Host: 154.89.149.68:6379
     Type: node
     Pass: root123456
+JWT:
+  AccessSecret: "!@#$mscoin"
+  AccessExpire: 604800

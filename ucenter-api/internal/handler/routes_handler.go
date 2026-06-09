@@ -5,7 +5,6 @@ package handler
 
 import (
 	"ucenter-api/internal/svc"
-
 )
 
 func RegisterHandlers(r *Routers, serverCtx *svc.ServiceContext) {
@@ -15,4 +14,9 @@ func RegisterHandlers(r *Routers, serverCtx *svc.ServiceContext) {
 	registerRouter := r.Group()
 	registerRouter.Post("/uc/register/phone", register.Register)
 	registerRouter.Post("/uc/mobile/code", register.SendCode)
+
+	loginRouter := r.Group()
+	login := NewLoginHandler(serverCtx)
+
+	loginRouter.Post("/uc/login", login.Login)
 }

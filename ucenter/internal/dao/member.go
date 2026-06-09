@@ -13,6 +13,15 @@ type MemberRepo struct {
 	conn *gorms.GormConn
 }
 
+func (m *MemberRepo) UpdateLoginCount(ctx context.Context, id int64, step int) error {
+	session := m.conn.Session(ctx)
+	err := session.Exec("update member set login_count = login_count + ? where id = ?", step, id).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func NewMemberRepo(db *msdb.MsDB) *MemberRepo {
 	return &MemberRepo{
 		conn: gorms.New(db.Conn),

@@ -13,12 +13,12 @@ import (
 )
 
 type MemberDomain struct {
-	MemberRepo repo.MemberRepo
+	memberRepo repo.MemberRepo
 }
 
 func (d *MemberDomain) FindByPhone(ctx context.Context, phone string) (*model.Member, error) {
 	//涉及到数据库查询
-	mem, err := d.MemberRepo.FindByPhone(ctx, phone)
+	mem, err := d.memberRepo.FindByPhone(ctx, phone)
 	if err != nil {
 		return nil, err
 	}
@@ -40,12 +40,13 @@ func (d *MemberDomain) Register(
 	mem.Username = username
 	mem.Password = pwd
 	mem.Salt = salt
+	mem.Avatar = "https://mszlu.oss-cn-beijing.aliyuncs.com/mscoin/defaultavatar.png"
 	mem.MobilePhone = phone
 	mem.FillSuperPartner(partner)
 	mem.Country = country
 	mem.MemberLevel = model.GENERAL
 	mem.PromotionCode = promotion
-	err := d.MemberRepo.Save(ctx, mem)
+	err := d.memberRepo.Save(ctx, mem)
 	if err != nil {
 		logx.Error(ctx, "注册失败, error=%v", err)
 		return errors.New("数据库异常")
@@ -53,8 +54,15 @@ func (d *MemberDomain) Register(
 
 	return nil
 }
+
+func (d *MemberDomain) UpdateLoginCount(background context.Context, id int64, i int) {
+	err := d.memberRepo.UpdateLoginCount(background, id, i)
+	if err != nil {
+		logx.Error(err)
+	}
+}
 func NewMemberDomain(db *msdb.MsDB) *MemberDomain {
 	return &MemberDomain{
-		MemberRepo: dao.NewMemberRepo(db),
+		memberRepo: dao.NewMemberRepo(db),
 	}
 }
