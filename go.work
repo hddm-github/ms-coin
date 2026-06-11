@@ -6,4 +6,6 @@ use (
 	./ucenter
 	./ucenter-api
 	./jobcenter
+	./market
+	./market-api
 )

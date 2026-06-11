@@ -1,0 +1,35 @@
+package logic
+
+import (
+	"context"
+	"grpc-common/market/types/rate"
+	"market/internal/domain"
+	"market/internal/svc"
+
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+const RateCacheKey = "REGISTER:"
+
+type RateByPhoneLogic struct {
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+	logx.Logger
+	exchangeRateDomain *domain.ExchangeRateDomain
+}
+
+func (l *RateByPhoneLogic) UsdRate(req *rate.RateReq) (*rate.RateRes, error) {
+	usdRate := l.exchangeRateDomain.UsdRate(req.Unit)
+	return &rate.RateRes{
+		Rate: usdRate,
+	}, nil
+}
+
+func NewRateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RateByPhoneLogic {
+	return &RateByPhoneLogic{
+		ctx:                ctx,
+		svcCtx:             svcCtx,
+		Logger:             logx.WithContext(ctx),
+		exchangeRateDomain: domain.NewExchangeRateDomain(),
+	}
+}
