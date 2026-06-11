@@ -11,22 +11,22 @@ import (
 
 const RateCacheKey = "REGISTER:"
 
-type RateByPhoneLogic struct {
+type ExchangeRateLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 	exchangeRateDomain *domain.ExchangeRateDomain
 }
 
-func (l *RateByPhoneLogic) UsdRate(req *rate.RateReq) (*rate.RateRes, error) {
+func (l *ExchangeRateLogic) UsdRate(req *rate.RateReq) (*rate.RateRes, error) {
 	usdRate := l.exchangeRateDomain.UsdRate(req.Unit)
 	return &rate.RateRes{
 		Rate: usdRate,
 	}, nil
 }
 
-func NewRateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RateByPhoneLogic {
-	return &RateByPhoneLogic{
+func NewRateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ExchangeRateLogic {
+	return &ExchangeRateLogic{
 		ctx:                ctx,
 		svcCtx:             svcCtx,
 		Logger:             logx.WithContext(ctx),

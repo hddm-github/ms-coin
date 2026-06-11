@@ -1,26 +1,30 @@
 package domain
 
 import (
+	"context"
+	"market/internal/dao"
+	"market/internal/model"
 	"market/internal/repo"
-	"strings"
+	"mscoin-common/msdb"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type ExchangeRateDomain struct {
+type ExchangeCoinDomain struct {
 	exchangeCoinRepo repo.ExchangeCoinRepo
 }
 
-func NewExchangeRateDomain() *ExchangeRateDomain {
-	return &ExchangeRateDomain{}
+func NewExchangeCoinDomain(db *msdb.MsDB) *ExchangeCoinDomain {
+	return &ExchangeCoinDomain{
+		exchangeCoinRepo: dao.NewExchangeCoinDao(db),
+	}
 }
 
-func (d *ExchangeRateDomain) UsdRate(unit string) float64 {
-	// 应该去 redis 查询，在定时任务做一个
-	unit = strings.ToUpper(unit)
-	if "CNY" == unit {
-		return 6.8
-	} else if "JPY" == unit {
-		return 180.03
+func (d *ExchangeCoinDomain) FindVisible(ctx context.Context) (list []*model.ExchangeCoin) {
+	list, err := d.exchangeCoinRepo.FindVisible(ctx)
+	if err != nil {
+		logx.Error(err)
+		return []*model.ExchangeCoin{}
 	}
-
-	return 0
+	return list
 }

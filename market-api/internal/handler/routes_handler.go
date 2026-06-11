@@ -11,7 +11,10 @@ func RegisterHandlers(r *Routers, serverCtx *svc.ServiceContext) {
 
 	// 如果要是有中间件怎么办
 	rate := NewExchangeRateHandler(serverCtx)
-	exchangeRateRouter := r.Group()
-	exchangeRateRouter.Post("/exchange-rate/usd/:unit", rate.UsdRate)
+	exchangeRouter := r.Group()
+	exchangeRouter.Post("/exchange-rate/usd/:unit", rate.UsdRate)
 
+	market := NewMarketHandler(serverCtx)
+	marketRouter := r.Group()
+	marketRouter.Post("/symbol-thumb-trend", market.SymbolThumbTrend)
 }
