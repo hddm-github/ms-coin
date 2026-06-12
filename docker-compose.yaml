@@ -1,0 +1,273 @@
+services:
+
+  # ==================== MySQL ====================
+  mysql:
+    container_name: mscoin-mysql
+    image: docker.m.daocloud.io/library/mysql:8.0.20
+    restart: always
+
+    ports:
+      - "3309:3306"
+
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: zero_mall
+
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+
+    volumes:
+      - /data/mscoin/mysql/data:/var/lib/mysql
+      - /data/mscoin/mysql/logs:/logs
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+    networks:
+      - mscoin-net
+
+
+
+  # ==================== Redis ====================
+  redis:
+    container_name: mscoin-redis
+    image: docker.m.daocloud.io/library/redis:6.2.7
+    restart: always
+
+    ports:
+      - "6379:6379"
+
+    command: redis-server --requirepass root123456 --appendonly yes
+
+    volumes:
+      - /data/mscoin/redis/data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "root123456", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    logging:
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+    networks:
+      - mscoin-net
+
+
+
+  # ==================== Etcd ====================
+  # etcd:
+  #   container_name: mscoin-etcd
+  #   image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/bitnami/etcd:3.5.6
+
+  #   user: root
+  #   restart: always
+
+  #   environment:
+  #     - ALLOW_NONE_AUTHENTICATION=yes
+
+  #     # 客户端监听
+  #     - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+
+  #     # 客户端广播地址（公网 IP）
+  #     - ETCD_ADVERTISE_CLIENT_URLS=http://154.89.149.68:2379
+
+  #     # 集群节点配置
+  #     - ETCD_NAME=etcd-node1
+  #     - ETCD_INITIAL_CLUSTER=etcd-node1=http://mscoin-etcd:2380
+  #     - ETCD_INITIAL_CLUSTER_STATE=new
+
+  #     # peer 通信
+  #     - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+
+  #   volumes:
+  #     - /data/mscoin/etcd/data:/bitnami/etcd/data
+
+  #   ports:
+  #     - "2379:2379"
+  #     - "2380:2380"
+
+  #   healthcheck:
+  #     test: ["CMD", "etcdctl", "endpoint", "health"]
+  #     interval: 15s
+  #     timeout: 10s
+  #     retries: 10
+
+  #   logging:
+  #     options:
+  #       max-size: "50m"
+  #       max-file: "3"
+
+  #   networks:
+  #     - mscoin-net
+
+  etcd:
+    container_name: mscoin-etcd
+
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/bitnami/etcd:3.5.6
+
+    restart: always
+
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://154.89.149.68:2379
+      - ETCD_NAME=etcd-node1
+      - ETCD_INITIAL_CLUSTER=etcd-node1=http://mscoin-etcd:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+
+    volumes:
+      - /data/mscoin/etcd/data:/bitnami/etcd/data
+
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+
+    networks:
+      - mscoin-net
+
+  # ==================== MongoDB ====================
+  mongo:
+    container_name: mscoin-mongo
+    image: docker.m.daocloud.io/library/mongo:4.2.1
+
+    restart: always
+
+    ports:
+      - "27018:27017"
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root123456
+
+    volumes:
+      - /data/mscoin/mongo/db:/data/db
+      - /data/mscoin/mongo/log:/var/log/mongodb
+
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+    networks:
+      - mscoin-net
+
+
+
+  # ==================== Kafka ====================
+  kafka:
+    container_name: mscoin-kafka
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/bitnami/kafka:3.5.1
+
+    restart: always
+
+    ports:
+      - "9092:9092"
+
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+
+      # 节点 ID
+      - KAFKA_CFG_NODE_ID=1
+
+      # broker + controller
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+
+      # controller 名称
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+
+      # listener
+      - KAFKA_CFG_LISTENERS=INTERNAL://:29092,CONTROLLER://:9093,EXTERNAL://:9092
+
+      # 广播地址（必须公网IP）
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://mscoin-kafka:29092,EXTERNAL://154.89.149.68:9092
+
+      # listener协议
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+
+      # controller voter
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@mscoin-kafka:9093
+
+      # broker listener
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
+
+      # 允许明文
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
+      # 单节点因子
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=1
+
+      # 自动创建 topic
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+
+    logging:
+      options:
+        max-size: "200m"
+        max-file: "3"
+
+    networks:
+      - mscoin-net
+
+
+
+  # ==================== Kafdrop ====================
+  kafdrop:
+    container_name: mscoin-kafdrop
+    image: docker.m.daocloud.io/obsidiandynamics/kafdrop
+
+    restart: always
+
+    depends_on:
+      - kafka
+
+    ports:
+      - "9000:9000"
+
+    environment:
+      KAFKA_BROKERCONNECT: "mscoin-kafka:29092"
+      JVM_OPTS: "-Xms32M -Xmx64M"
+
+    logging:
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+    networks:
+      - mscoin-net
+
+
+
+networks:
+  mscoin-net:
+    driver: bridge

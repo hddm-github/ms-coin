@@ -7,6 +7,7 @@ import (
 	"market/internal/database"
 	"market/internal/model"
 	"market/internal/repo"
+	"mscoin-common/op"
 	"mscoin-common/tools"
 	"sync"
 	"time"
@@ -43,8 +44,10 @@ func (d *MarketDomain) FindSymbolThumbTrend(coins []*model.ExchangeCoin) []*mark
 			// 降序排列
 			// 构建趋势
 			trend := make([]float64, length)
-			var high float64 = klines[0].HighestPrice
-			var low float64 = klines[0].LowestPrice
+			var high = klines[0].HighestPrice
+			var low = klines[0].LowestPrice
+			var volumes float64 = 0
+			var turnover float64 = 0
 			for j := length - 1; j >= 0; j-- {
 				trend[j] = klines[j].ClosePrice
 				highestPrice := klines[j].HighestPrice
@@ -55,11 +58,17 @@ func (d *MarketDomain) FindSymbolThumbTrend(coins []*model.ExchangeCoin) []*mark
 				if lowPrice < low {
 					low = lowPrice
 				}
+				volumes += op.AddN(volumes, klines[j].Volume, 8)
+				turnover += op.AddN(turnover, klines[j].Turnover, 8)
 			}
 			newKline := klines[0]
 			oldKline := klines[length-1]
 			thumb := newKline.ToCoinThumb(v.Symbol, oldKline)
 			thumb.Trend = trend
+			thumb.High = high
+			thumb.Low = low
+			thumb.Volume = volumes
+			thumb.Turnover = turnover
 			coinThumbs[i] = thumb
 		}(i, v)
 	}

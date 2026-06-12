@@ -2,26 +2,20 @@ package kline
 
 import (
 	"encoding/json"
-	"jobcenter/internal/database"
+	"jobcenter/internal/config"
 	"jobcenter/internal/domain"
+	"jobcenter/internal/svc"
 	"log"
 	"mscoin-common/tools"
 	"sync"
 	"time"
 )
 
-type OkxConfig struct {
-	ApiKey    string
-	SecretKey string
-	Pass      string
-	Host      string
-	Proxy     string
-}
-
 type Kline struct {
 	wg          sync.WaitGroup
-	c           OkxConfig
+	c           config.OkxConfig
 	klineDomain *domain.KlineDomain
+	queueDomain *domain.QueueDomain
 }
 type OkxResult struct {
 	Code string     `json:"code"`
@@ -34,6 +28,14 @@ func (k *Kline) Do(period string) {
 	// 获取某个币 BTC-USDT ETH-USDT
 	go k.getKlineData("BTC-USDT", "BTC/USDT", period)
 	go k.getKlineData("ETH-USDT", "ETH/USDT", period)
+	//go k.getKlineData("BNB-USDT", "BNB/USDT", period)
+	//go k.getKlineData("SOL-USDT", "SOL/USDT", period)
+	//go k.getKlineData("XRP-USDT", "XRP/USDT", period)
+	//go k.getKlineData("HOGE-USDT", "HOGE/USDT", period)
+	//go k.getKlineData("FIL-USDT", "FIL/USDT", period)
+	//go k.getKlineData("TRX-USDT", "TRX/USDT", period)
+	//go k.getKlineData("EOS-USDT", "EOS/USDT", period)
+	//go k.getKlineData("ADA-USDT", "ADA/USDT", period)
 }
 
 func (k *Kline) getKlineData(instId string, symbol string, period string) {
@@ -65,15 +67,22 @@ func (k *Kline) getKlineData(instId string, symbol string, period string) {
 	if result.Code == "0" {
 		//代表成功
 		k.klineDomain.SaveBatch(result.Data, symbol, period)
+		if "1m" == period {
+			// 把这个最新的数据 result.Data[0] 推送到 market 服务，推送到前端页面，进行实时变化
+			if len(result.Data) > 0 {
+				k.queueDomain.Send1mKline(result.Data[0], symbol)
+			}
+		}
 	}
 	log.Println("=================END===============")
 	k.wg.Done()
 	return
 }
 
-func NewKline(c OkxConfig, client *database.MongoClient) *Kline {
+func NewKline(c config.OkxConfig, ctx *svc.ServiceContext) *Kline {
 	return &Kline{
 		c:           c,
-		klineDomain: domain.NewklineDomain(client),
+		klineDomain: domain.NewklineDomain(ctx.MongoClient),
+		queueDomain: domain.NewQueueDomain(ctx.KafkaClient),
 	}
 }

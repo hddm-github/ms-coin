@@ -4,6 +4,8 @@
 package config
 
 import (
+	"market-api/internal/database"
+
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -12,4 +14,5 @@ type Config struct {
 	rest.RestConf
 	MarketRpc zrpc.RpcClientConf
 	Prefix    string
+	Kafka     database.KafkaConfig
 }
