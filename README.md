@@ -86,6 +86,7 @@ server {
 
 | 日期 | 提交类型 | 提交内容描述 | 提交人 |
 | :--- | :--- | :--- | :--- |
+| 2026-06-12 | `fix` | 修复 `market` 模块中 K 线趋势查询的数组越界与变量遮蔽 Bug，改为并发查询 MongoDB 提高性能，并延长 RPC 服务端超时配置 | hddm |
 | 2026-06-11 | `fix` | 修复 `market` RPC 服务未注册 `MarketServer`、方法名不匹配、切片越界及 MySQL 查询字段错误问题 | hddm |
 | 2026-06-11 | `feat` | 初始化 `market` RPC 与 `market-api` 模块，完成汇率查询联调，修复编译包依赖错误，并递归忽略 `etc/conf.yaml` 配置文件 | hddm |
 | 2026-06-09 | `chore` | 脱敏 `ucenter` 的 MySQL/Redis 配置及 `jobcenter` 的配置文件模版，更改为标准本地开发默认配置 | hddm |

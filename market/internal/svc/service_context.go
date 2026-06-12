@@ -9,9 +9,10 @@ import (
 )
 
 type ServiceContext struct {
-	Config config.Config
-	Cache  cache.Cache
-	Db     *msdb.MsDB
+	Config      config.Config
+	Cache       cache.Cache
+	Db          *msdb.MsDB
+	MongoClient *database.MongoClient
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -22,8 +23,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		nil,
 		func(*cache.Options) {})
 	return &ServiceContext{
-		Config: c,
-		Cache:  redisCache,
-		Db:     database.ConnMysql(c.Mysql),
+		Config:      c,
+		Cache:       redisCache,
+		Db:          database.ConnMysql(c.Mysql),
+		MongoClient: database.ConnectMongo(c.Mongo),
 	}
 }
